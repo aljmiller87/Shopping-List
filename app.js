@@ -11,7 +11,7 @@ function addItem(state, item) {
 //render list
 function renderList(state, element) {
    var itemsHTML = state.groceryItems.map(function(item) {
-       return '<li><span class="shopping-item">' + item + '</span><button class="shopping-item-toggle"><span>check</span></button>' 
+       return '<li id="'+ item +'"><span class="shopping-item">' + item + '</span><button class="shopping-item-toggle"><span>check</span></button>' 
        + '<span> </span> ' + '<button class="shopping-item-delete"><span>delete</span></button>' +'</li>';
    });
    element.html(itemsHTML);
@@ -24,7 +24,7 @@ $('#js-shopping-list-form').submit(function(event) {
     var item = $('#shopping-list-entry').val()
     addItem(state, item);
     renderList(state, $('.shopping-list'));
-    $(this).val('');
+    $('#shopping-list-entry').val('');
 });
 
 function deleteListItem(state, jQueryElement){
@@ -38,10 +38,11 @@ function deleteListItem(state, jQueryElement){
 
 // Event listener: delete button
 $('ul').on('click', 'button.shopping-item-delete', function(event) {
-//	below line is attempt to find string being removed and
-//  then delete it from state via iterating over state array
-//	var tempDelete = $(this).closest('li').val();
-	$(this).closest('li').remove();
+	var toDelete = $(this).closest('li');
+  $(this).closest('li').remove();
+  var deleteIndexPosition = state.groceryItems.indexOf(toDelete.attr('id'));
+  state.groceryItems = state.groceryItems.splice(deleteIndexPosition, 1);
+
 });	
 
 // Event listener: check button
@@ -50,10 +51,6 @@ $('ul').on('click', 'button.shopping-item-toggle', function(event) {
 });
 
 // Remaining issues:
-// How to wipe input text after submiting?
 // Strikethrough bar is black not gray?
-// How to delete string from state as well as DOM 
-
-
 
 
